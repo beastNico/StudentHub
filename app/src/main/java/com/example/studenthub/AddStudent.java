@@ -2,7 +2,9 @@ package com.example.studenthub;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -36,12 +38,33 @@ public class AddStudent extends AppCompatActivity {
                 String studentMajor = major.getText().toString();
                 String studentEmail = email.getText().toString();
 
-                Student newStudent = new Student(studentName, studentMatricNo, studentYear, studentSemester, studentMajor, studentEmail);
+                saveStudentData(studentName, studentMatricNo, studentYear, studentSemester, studentMajor, studentEmail);
 
-                Intent intent = new Intent(AddStudent.this, MainActivity.class);
-                intent.putExtra("NEW_STUDENT", (CharSequence) newStudent);
-                startActivity(intent);
+                Intent resultIntent = new Intent();
+                setResult(RESULT_OK, resultIntent);
+                resultIntent.putExtra("NEW_STUDENT", new Student(studentName));
+                finish();
             }
         });
+    }
+
+    private void saveStudentData(String name, String matricNo, int year, int semester, String major, String email) {
+        SharedPreferences sharedPreferences = getSharedPreferences("StudentPreferences", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        int numberOfStudents = sharedPreferences.getInt("numberOfStudents", 0);
+
+        numberOfStudents++;
+
+        editor.putString("name" + numberOfStudents, name);
+        editor.putString("matricNo" + numberOfStudents, matricNo);
+        editor.putInt("year" + numberOfStudents, year);
+        editor.putInt("semester" + numberOfStudents, semester);
+        editor.putString("major" + numberOfStudents, major);
+        editor.putString("email" + numberOfStudents, email);
+
+        editor.putInt("numberOfStudents", numberOfStudents);
+
+        editor.apply();
     }
 }

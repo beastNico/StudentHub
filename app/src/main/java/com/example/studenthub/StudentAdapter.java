@@ -8,15 +8,20 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList; // have to change this
-import java.util.List; // have to change this
+import java.util.ArrayList;
+import java.util.List;
 
 public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentViewHolder> {
 
     private List<Student> studentList;
+    private OnItemClickListener onItemClickListener;
 
     public StudentAdapter() {
         this.studentList = new ArrayList<>();
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.onItemClickListener = listener;
     }
 
     @NonNull
@@ -28,8 +33,17 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
 
     @Override
     public void onBindViewHolder(@NonNull StudentViewHolder holder, int position) {
-        Student student = studentList.get(position);
+        final Student student = studentList.get(position);
         holder.bind(student);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (onItemClickListener != null) {
+                    onItemClickListener.onItemClick(student);
+                }
+            }
+        });
     }
 
     @Override
@@ -40,6 +54,15 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
     public void addStudent(Student student) {
         studentList.add(student);
         notifyItemInserted(studentList.size() - 1);
+    }
+
+    public void clearStudents() {
+        studentList.clear();
+        notifyDataSetChanged();
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(Student student);
     }
 
     static class StudentViewHolder extends RecyclerView.ViewHolder {
@@ -55,4 +78,3 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
         }
     }
 }
-
