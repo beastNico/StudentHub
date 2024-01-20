@@ -12,9 +12,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
-        android:layout_marginTop="148dp"
+        android:layout_marginTop="88dp"
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/rectangle_15__1_" />
@@ -30,11 +31,10 @@
         app:srcCompat="@drawable/ic_reading" />
 
     <EditText
-        android:id="@+id/add_studentName"
+        android:id="@+id/edit_studentName"
         android:layout_width="380dp"
         android:layout_height="50dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="15dp"
         android:background="@drawable/roundstyle"
         android:ems="10"
@@ -45,12 +45,15 @@
         android:paddingEnd="16dp"
         android:textColor="@color/font"
         android:textColorHint="@color/font"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ic_back" />
+        app:layout_constraintTop_toBottomOf="@+id/ic_back"
+        app:layout_constraintVertical_bias="0.076" />
 
     <EditText
-        android:id="@+id/add_studentMatric"
+        android:id="@+id/edit_studentMatric"
         android:layout_width="380dp"
         android:layout_height="50dp"
         android:layout_marginStart="16dp"
@@ -67,10 +70,10 @@
         android:textColorHint="@color/font"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_studentName" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_studentName" />
 
     <EditText
-        android:id="@+id/add_studentYear"
+        android:id="@+id/edit_studentYear"
         android:layout_width="380dp"
         android:layout_height="50dp"
         android:layout_marginStart="16dp"
@@ -86,10 +89,10 @@
         android:textColorHint="@color/font"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_studentMatric" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_studentMatric" />
 
     <EditText
-        android:id="@+id/add_studentSemester"
+        android:id="@+id/edit_studentSemester"
         android:layout_width="380dp"
         android:layout_height="50dp"
         android:layout_marginStart="16dp"
@@ -105,10 +108,10 @@
         android:textColorHint="@color/font"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_studentYear" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_studentYear" />
 
     <EditText
-        android:id="@+id/add_studentMajor"
+        android:id="@+id/edit_studentMajor"
         android:layout_width="380dp"
         android:layout_height="50dp"
         android:layout_marginStart="16dp"
@@ -124,10 +127,10 @@
         android:textColorHint="@color/font"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_studentSemester" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_studentSemester" />
 
     <EditText
-        android:id="@+id/add_studentEmail"
+        android:id="@+id/edit_studentEmail"
         android:layout_width="380dp"
         android:layout_height="50dp"
         android:layout_marginStart="15dp"
@@ -143,10 +146,10 @@
         android:textColorHint="@color/font"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_studentMajor" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_studentMajor" />
 
     <Button
-        android:id="@+id/button_save_addStudent"
+        android:id="@+id/button_save_editStudent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="161dp"
@@ -157,6 +160,6 @@
         android:textColor="@color/background2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_studentEmail" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_studentEmail" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

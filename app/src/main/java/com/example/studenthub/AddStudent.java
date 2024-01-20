@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.studenthub.Student;
+
 public class AddStudent extends AppCompatActivity {
 
     EditText name, matricNo, year, semester, major, email;
@@ -40,10 +42,7 @@ public class AddStudent extends AppCompatActivity {
 
                 saveStudentData(studentName, studentMatricNo, studentYear, studentSemester, studentMajor, studentEmail);
 
-                Intent resultIntent = new Intent();
-                setResult(RESULT_OK, resultIntent);
-                resultIntent.putExtra("NEW_STUDENT", new Student(studentName));
-                finish();
+                instantSave(new Student(studentName, studentMatricNo, studentYear, studentSemester, studentMajor, studentEmail));
             }
         });
     }
@@ -66,5 +65,12 @@ public class AddStudent extends AppCompatActivity {
         editor.putInt("numberOfStudents", numberOfStudents);
 
         editor.apply();
+    }
+
+    private void instantSave(Student student) {
+        Intent resultIntent = new Intent();
+        setResult(RESULT_OK, resultIntent);
+        resultIntent.putExtra("NEW_STUDENT", student);
+        finish();
     }
 }
