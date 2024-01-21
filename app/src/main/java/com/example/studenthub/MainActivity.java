@@ -1,15 +1,17 @@
 package com.example.studenthub;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -44,6 +46,12 @@ public class MainActivity extends AppCompatActivity {
                 profileIntent.putExtra("SELECTED_STUDENT", student);
                 startActivity(profileIntent);
             }
+
+            @Override
+            public void onDeleteClick(Student student) {
+                // Handle delete click
+                showDeleteConfirmationDialog(student);
+            }
         });
 
         loadStudentData();
@@ -57,28 +65,32 @@ public class MainActivity extends AppCompatActivity {
             if (data.hasExtra("NEW_STUDENT")) {
                 Student newStudent = data.getParcelableExtra("NEW_STUDENT");
                 adapter.addStudent(newStudent);
-                adapter.notifyItemInserted(adapter.getItemCount() - 1);
             }
         }
     }
 
     private void loadStudentData() {
-        SharedPreferences sharedPreferences = getSharedPreferences("StudentPreferences", Context.MODE_PRIVATE);
-        int numberOfStudents = sharedPreferences.getInt("numberOfStudents", 0);
+        // Implement loading student data from SharedPreferences if needed
+    }
 
-        adapter.clearStudents();
+    private void showDeleteConfirmationDialog(final Student student) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Delete Student");
+        builder.setMessage("Are you sure you want to delete this student?");
+        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Perform deletion
+                deleteStudent(student);
+            }
+        });
+        builder.setNegativeButton("Cancel", null);
+        builder.show();
+    }
 
-        for (int i = 1; i <= numberOfStudents; i++) {
-            String studentName = sharedPreferences.getString("name" + i, "");
-            String studentMatricNo = sharedPreferences.getString("matricNo" + i, "");
-            int studentYear = sharedPreferences.getInt("year" + i, -1);
-            int studentSemester = sharedPreferences.getInt("semester" + i, -1);
-            String studentMajor = sharedPreferences.getString("major" + i, "");
-            String studentEmail = sharedPreferences.getString("email" + i, "");
-
-            Student student = new Student(studentName, studentMatricNo, studentYear, studentSemester, studentMajor, studentEmail);
-            adapter.addStudent(student);
-        }
-        adapter.notifyDataSetChanged();
+    private void deleteStudent(Student student) {
+        // Implement the deletion logic here
+        // For example, remove the student from the adapter and update the UI
+        adapter.removeStudent(student);
     }
 }

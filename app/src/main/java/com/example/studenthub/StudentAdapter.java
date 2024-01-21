@@ -1,11 +1,17 @@
 package com.example.studenthub;
 
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -44,6 +50,13 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
                 }
             }
         });
+
+        holder.icMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showPopupMenu(view, student);
+            }
+        });
     }
 
     @Override
@@ -56,6 +69,14 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
         notifyItemInserted(studentList.size() - 1);
     }
 
+    public void removeStudent(Student student) {
+        int position = studentList.indexOf(student);
+        if (position != -1) {
+            studentList.remove(position);
+            notifyItemRemoved(position);
+        }
+    }
+
     public void clearStudents() {
         studentList.clear();
         notifyDataSetChanged();
@@ -63,18 +84,47 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
 
     public interface OnItemClickListener {
         void onItemClick(Student student);
+        void onDeleteClick(Student student);
     }
 
     static class StudentViewHolder extends RecyclerView.ViewHolder {
         private TextView studentName;
+        private ImageView icMore;
 
         public StudentViewHolder(@NonNull View itemView) {
             super(itemView);
             studentName = itemView.findViewById(R.id.student_name);
+            icMore = itemView.findViewById(R.id.ic_more);
         }
 
         public void bind(Student student) {
             studentName.setText(student.getName());
         }
     }
+
+    private void showPopupMenu(View view, final Student student) {
+        PopupMenu popupMenu = new PopupMenu(view.getContext(), view);
+        MenuInflater inflater = popupMenu.getMenuInflater();
+        inflater.inflate(R.menu.student_menu, popupMenu.getMenu()); // Define your menu in res/menu folder
+
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                // Handle menu item click
+                int itemId = item.getItemId();
+                if (itemId == R.id.menu_delete) {
+                    // Delete action
+                    if (onItemClickListener != null) {
+                        onItemClickListener.onDeleteClick(student);
+                    }
+                    return true;
+                }
+                // Add more menu items if needed
+                return false;
+            }
+        });
+
+        popupMenu.show();
+    }
+
 }
