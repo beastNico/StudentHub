@@ -1,6 +1,5 @@
 package com.example.studenthub;
 
-import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -8,12 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,6 +73,14 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
         }
     }
 
+    public void updateStudent(Student updatedStudent) {
+        int position = studentList.indexOf(updatedStudent);
+        if (position != -1) {
+            studentList.set(position, updatedStudent);
+            notifyItemChanged(position);
+        }
+    }
+
     public void clearStudents() {
         studentList.clear();
         notifyDataSetChanged();
@@ -105,7 +109,7 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
     private void showPopupMenu(View view, final Student student) {
         PopupMenu popupMenu = new PopupMenu(view.getContext(), view);
         MenuInflater inflater = popupMenu.getMenuInflater();
-        inflater.inflate(R.menu.student_menu, popupMenu.getMenu()); // Define your menu in res/menu folder
+        inflater.inflate(R.menu.student_menu, popupMenu.getMenu());
 
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
@@ -119,12 +123,12 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
                     }
                     return true;
                 }
-                // Add more menu items if needed
+
                 return false;
             }
+
         });
 
         popupMenu.show();
     }
-
 }

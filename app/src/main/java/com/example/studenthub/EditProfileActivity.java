@@ -41,18 +41,14 @@ public class EditProfileActivity extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Handle the save operation, e.g., saveStudentData method
-                // ...
-
-                // Instantly save the student data
-                instantSave(new Student(
+                Student updatedStudent = new Student(
                         name.getText().toString(),
                         matricNo.getText().toString(),
                         Integer.parseInt(year.getText().toString()),
                         Integer.parseInt(semester.getText().toString()),
                         major.getText().toString(),
                         email.getText().toString()
-                ));
+                );
 
                 // Update the StudentProfileActivity with the new data
                 updateStudentProfile(new Student(

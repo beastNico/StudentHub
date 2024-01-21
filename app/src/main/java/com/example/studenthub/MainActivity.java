@@ -65,13 +65,32 @@ public class MainActivity extends AppCompatActivity {
             if (data.hasExtra("NEW_STUDENT")) {
                 Student newStudent = data.getParcelableExtra("NEW_STUDENT");
                 adapter.addStudent(newStudent);
+            } else if (data.hasExtra("UPDATED_STUDENT")) {
+                Student updatedStudent = data.getParcelableExtra("UPDATED_STUDENT");
+                adapter.updateStudent(updatedStudent);
             }
         }
     }
 
+
     private void loadStudentData() {
-        // Implement loading student data from SharedPreferences if needed
+        SharedPreferences sharedPreferences = getSharedPreferences("StudentPreferences", Context.MODE_PRIVATE);
+        int numberOfStudents = sharedPreferences.getInt("numberOfStudents", 0);
+
+        for (int i = 1; i <= numberOfStudents; i++) {
+            String studentName = sharedPreferences.getString("name" + i, "");
+            String studentMatricNo = sharedPreferences.getString("matricNo" + i, "");
+            int studentYear = sharedPreferences.getInt("year" + i, -1);
+            int studentSemester = sharedPreferences.getInt("semester" + i, -1);
+            String studentMajor = sharedPreferences.getString("major" + i, "");
+            String studentEmail = sharedPreferences.getString("email" + i, "");
+
+            Student student = new Student(studentName, studentMatricNo, studentYear, studentSemester, studentMajor, studentEmail);
+            adapter.addStudent(student);
+        }
+        adapter.notifyDataSetChanged();
     }
+
 
     private void showDeleteConfirmationDialog(final Student student) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -80,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // Perform deletion
+
                 deleteStudent(student);
             }
         });
@@ -89,8 +108,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void deleteStudent(Student student) {
-        // Implement the deletion logic here
-        // For example, remove the student from the adapter and update the UI
+
         adapter.removeStudent(student);
     }
 }
