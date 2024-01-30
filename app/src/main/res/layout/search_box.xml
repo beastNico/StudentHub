@@ -23,6 +23,7 @@
         android:ems="10"
         android:hint="Search student"
         android:inputType="text"
+        android:textColor="@color/font"
         android:textColorHint="@color/font"
         android:background="@android:color/transparent"
         android:layout_centerVertical="true" />

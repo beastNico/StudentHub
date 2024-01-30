@@ -10,16 +10,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
-import java.util.ArrayList;
-import java.util.List;
 
 public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentViewHolder> {
 
-    private List<Student> studentList;
+    private CustomArrayList<Student> studentList;
     private OnItemClickListener onItemClickListener;
 
     public StudentAdapter() {
-        this.studentList = new ArrayList<>();
+        this.studentList = new CustomArrayList<>();
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
@@ -126,7 +124,6 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
 
                 return false;
             }
-
         });
 
         popupMenu.show();

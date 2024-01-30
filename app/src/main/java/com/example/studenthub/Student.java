@@ -47,6 +47,10 @@ public class Student implements Parcelable {
         }
     };
 
+    public Student() {
+
+    }
+
     public String getName() {
         return name;
     }

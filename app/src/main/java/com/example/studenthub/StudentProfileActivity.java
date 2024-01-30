@@ -48,7 +48,7 @@ public class StudentProfileActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     // Open the EditProfileActivity
                     Intent intent = new Intent(StudentProfileActivity.this, EditProfileActivity.class);
-                    intent.putExtra("SELECTED_STUDENT", selectedStudent); // Pass the selected student data
+                    intent.putExtra("SELECTED_STUDENT", selectedStudent);
                     startActivity(intent);
                 }
             });
