@@ -100,7 +100,7 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
 
         public StudentViewHolder(@NonNull View itemView) {
             super(itemView);
-            studentName = itemView.findViewById(R.id.student_name);
+            studentName = itemView.findViewById(R.id.delete_student_name);
             icMore = itemView.findViewById(R.id.ic_more);
         }
 

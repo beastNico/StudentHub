@@ -22,10 +22,12 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_students"
         android:layout_width="380dp"
-        android:layout_height="697dp"
+        android:layout_height="665dp"
         android:layout_marginStart="15dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
+        android:scrollbars="vertical"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/student_search_box"
@@ -37,11 +39,13 @@
         android:layout_height="64dp"
         android:layout_marginStart="173dp"
         android:layout_marginEnd="174dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="68dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/ic_add" />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
