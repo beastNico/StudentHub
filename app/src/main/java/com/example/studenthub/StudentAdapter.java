@@ -68,12 +68,24 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
     }
 
     public void removeStudent(Student student) {
-        int position = studentList.indexOf(student);
-        if (position != -1) {
-            studentList.remove(position);
-            notifyItemRemoved(position);
+        // Find the student in the main list and remove it
+        int positionInMainList = studentList.indexOf(student);
+        if (positionInMainList != -1) {
+            studentList.remove(positionInMainList);
         }
+
+        // Also remove the student from the filtered list and get its position for UI update
+        int positionInFilteredList = filteredStudentList.indexOf(student);
+        if (positionInFilteredList != -1) {
+            filteredStudentList.remove(positionInFilteredList);
+            notifyItemRemoved(positionInFilteredList);
+        }
+
+        // Re-apply the filter to maintain consistency between lists
+        filter(searchText);
     }
+
+
 
     public void updateStudent(Student updatedStudent) {
         int position = studentList.indexOf(updatedStudent);
