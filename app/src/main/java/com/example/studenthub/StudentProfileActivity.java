@@ -28,7 +28,7 @@ public class StudentProfileActivity extends AppCompatActivity {
         if(getIntent().hasExtra("SELECTED_STUDENT")) {
             Student selectedStudent = getIntent().getParcelableExtra("SELECTED_STUDENT");
 
-            displayedName.setText("Student Name: " + selectedStudent.getName());
+            displayedName.setText("Name: " + selectedStudent.getName());
             displayedMatricNo.setText("Matric No.: " + selectedStudent.getMatricNo());
             displayedYear.setText("Year: " + String.valueOf(selectedStudent.getYear()));
             displayedSemester.setText("Semester: " + String.valueOf(selectedStudent.getSemester()));

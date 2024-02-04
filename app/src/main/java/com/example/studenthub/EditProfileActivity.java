@@ -139,6 +139,6 @@ public class EditProfileActivity extends AppCompatActivity {
         Intent resultIntent = new Intent();
         resultIntent.putExtra("UPDATED_STUDENT", selectedStudent);
         setResult(RESULT_OK, resultIntent);
-        // No need to finish() here, as the activity continues to display the updated data.
+
     }
 }

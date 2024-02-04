@@ -83,4 +83,10 @@ public class CustomArrayList<E> {
         sb.append("]");
         return sb.toString();
     }
+
+    public void addAll(CustomArrayList<E> collection) {
+        ensureCapacity(size + collection.size);
+        System.arraycopy(collection.elements, 0, elements, size, collection.size);
+        size += collection.size;
+    }
 }

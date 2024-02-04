@@ -14,10 +14,13 @@ import androidx.recyclerview.widget.RecyclerView;
 public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentViewHolder> {
 
     private CustomArrayList<Student> studentList;
+    private CustomArrayList<Student> filteredStudentList;
     private OnItemClickListener onItemClickListener;
+    private String searchText = "";
 
     public StudentAdapter() {
         this.studentList = new CustomArrayList<>();
+        this.filteredStudentList = new CustomArrayList<>();
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
@@ -33,7 +36,7 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
 
     @Override
     public void onBindViewHolder(@NonNull StudentViewHolder holder, int position) {
-        final Student student = studentList.get(position);
+        final Student student = filteredStudentList.get(position); // Use filteredStudentList
         holder.bind(student);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -55,12 +58,13 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
 
     @Override
     public int getItemCount() {
-        return studentList.size();
+        return filteredStudentList.size();
     }
 
     public void addStudent(Student student) {
         studentList.add(student);
         notifyItemInserted(studentList.size() - 1);
+        filter(searchText); // searchText to filter
     }
 
     public void removeStudent(Student student) {
@@ -82,6 +86,7 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
     public void clearStudents() {
         studentList.clear();
         notifyDataSetChanged();
+        filter("");
     }
 
     public interface OnItemClickListener {
@@ -128,4 +133,26 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
 
         popupMenu.show();
     }
+
+    public void filter(String text) {
+        searchText = text; // Update searchText
+        filteredStudentList.clear();
+
+        if (text.isEmpty()) {
+            // If the search box is empty, show all students
+            filteredStudentList.addAll(studentList);
+        } else {
+            // Filter students based on the entered text
+            text = text.toLowerCase();
+            for (int i = 0; i < studentList.size(); i++) {
+                Student student = studentList.get(i);
+                if (student.getName().toLowerCase().contains(text)) {
+                    filteredStudentList.add(student);
+                }
+            }
+        }
+
+        notifyDataSetChanged();
+    }
 }
+

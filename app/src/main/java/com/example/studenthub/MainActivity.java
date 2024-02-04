@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -29,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
         addStudent = findViewById(R.id.ic_addStudent);
         recyclerView = findViewById(R.id.recycler_view_students);
         adapter = new StudentAdapter();
+        recyclerView.setItemAnimator(null);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
@@ -53,12 +56,26 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onDeleteClick(Student student) {
-                // Handle delete click
                 showDeleteConfirmationDialog(student);
             }
         });
 
         loadStudentData();
+
+        searchBox.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                adapter.filter(charSequence.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
     }
 
     @Override
@@ -127,7 +144,6 @@ public class MainActivity extends AppCompatActivity {
 
             // Check if the matricNo matches the one of the student to be deleted
             if (storedMatricNo.equals(student.getMatricNo())) {
-                // Remove the data of the matching student
                 editor.remove("name" + i);
                 editor.remove("matricNo" + i);
                 editor.remove("year" + i);
@@ -151,7 +167,6 @@ public class MainActivity extends AppCompatActivity {
                 // Update the number of students in SharedPreferences
                 editor.putInt("numberOfStudents", numberOfStudents);
 
-                // Apply the changes
                 editor.apply();
 
                 break; // Break out of the loop once the student is deleted
