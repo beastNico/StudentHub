@@ -135,42 +135,64 @@ public class MainActivity extends AppCompatActivity {
     private void removeStudentFromSharedPreferences(Student student) {
         SharedPreferences sharedPreferences = getSharedPreferences("StudentPreferences", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-
         int numberOfStudents = sharedPreferences.getInt("numberOfStudents", 0);
 
-        // Iterate through the stored students to find the one to be deleted
-        for (int i = 1; i <= numberOfStudents; i++) {
-            String storedMatricNo = sharedPreferences.getString("matricNo" + i, "");
-
-            // Check if the matricNo matches the one of the student to be deleted
-            if (storedMatricNo.equals(student.getMatricNo())) {
-                editor.remove("name" + i);
-                editor.remove("matricNo" + i);
-                editor.remove("year" + i);
-                editor.remove("semester" + i);
-                editor.remove("major" + i);
-                editor.remove("email" + i);
-
-                // Decrement the number of students
-                numberOfStudents--;
-
-                // Shift the data for students after the deleted one
-                for (int j = i; j <= numberOfStudents; j++) {
-                    editor.putString("name" + j, sharedPreferences.getString("name" + (j + 1), ""));
-                    editor.putString("matricNo" + j, sharedPreferences.getString("matricNo" + (j + 1), ""));
-                    editor.putInt("year" + j, sharedPreferences.getInt("year" + (j + 1), -1));
-                    editor.putInt("semester" + j, sharedPreferences.getInt("semester" + (j + 1), -1));
-                    editor.putString("major" + j, sharedPreferences.getString("major" + (j + 1), ""));
-                    editor.putString("email" + j, sharedPreferences.getString("email" + (j + 1), ""));
+        boolean found = false;
+        for (int i = 0; i < numberOfStudents; i++) {
+            String storedMatricNo = sharedPreferences.getString("matricNo" + i, null);
+            if (storedMatricNo != null && storedMatricNo.equals(student.getMatricNo())) {
+                found = true; // Mark as found
+            }
+            if (found) {
+                // Shift data from (i+1) to i
+                if (i < numberOfStudents - 1) { // Check to prevent IndexOutOfBoundsException
+                    editor.putString("name" + i, sharedPreferences.getString("name" + (i + 1), ""));
+                    editor.putString("matricNo" + i, sharedPreferences.getString("matricNo" + (i + 1), ""));
+                    editor.putInt("year" + i, sharedPreferences.getInt("year" + (i + 1), -1));
+                    editor.putInt("semester" + i, sharedPreferences.getInt("semester" + (i + 1), -1));
+                    editor.putString("major" + i, sharedPreferences.getString("major" + (i + 1), ""));
+                    editor.putString("email" + i, sharedPreferences.getString("email" + (i + 1), ""));
+                } else {
+                    // Remove the last entry explicitly
+                    editor.remove("name" + i);
+                    editor.remove("matricNo" + i);
+                    editor.remove("year" + i);
+                    editor.remove("semester" + i);
+                    editor.remove("major" + i);
+                    editor.remove("email" + i);
                 }
-
-                // Update the number of students in SharedPreferences
-                editor.putInt("numberOfStudents", numberOfStudents);
-
-                editor.apply();
-
-                break; // Break out of the loop once the student is deleted
             }
         }
+        if (found) {
+            // Only decrement numberOfStudents if a deletion occurred
+            editor.putInt("numberOfStudents", numberOfStudents - 1);
+            editor.apply();
+        }
     }
+
+
+    private void shiftStudentData(SharedPreferences sharedPreferences, int targetIndex, int sourceIndex, SharedPreferences.Editor editor) {
+        // Move data from sourceIndex to targetIndex
+        editor.putString("name" + targetIndex, sharedPreferences.getString("name" + sourceIndex, ""));
+        editor.putString("matricNo" + targetIndex, sharedPreferences.getString("matricNo" + sourceIndex, ""));
+        editor.putInt("year" + targetIndex, sharedPreferences.getInt("year" + sourceIndex, -1));
+        editor.putInt("semester" + targetIndex, sharedPreferences.getInt("semester" + sourceIndex, -1));
+        editor.putString("major" + targetIndex, sharedPreferences.getString("major" + sourceIndex, ""));
+        editor.putString("email" + targetIndex, sharedPreferences.getString("email" + sourceIndex, ""));
+        // Do not apply yet; apply will be called after all modifications are done
+    }
+
+    private void clearStudentData(int index, SharedPreferences.Editor editor) {
+        // Remove data for the student at the given index
+        editor.remove("name" + index);
+        editor.remove("matricNo" + index);
+        editor.remove("year" + index);
+        editor.remove("semester" + index);
+        editor.remove("major" + index);
+        editor.remove("email" + index);
+        // No apply here; it's called outside after all updates are made
+    }
+
+
+
 }
