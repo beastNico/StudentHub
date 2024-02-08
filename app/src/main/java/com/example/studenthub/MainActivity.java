@@ -7,26 +7,30 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
     private EditText searchBox;
     ImageView addStudent;
     private RecyclerView recyclerView;
     private StudentAdapter adapter;
-    private CustomArrayList<Student> studentList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         addStudent = findViewById(R.id.ic_addStudent);
         recyclerView = findViewById(R.id.recycler_view_students);
@@ -37,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         searchBox = findViewById(R.id.searchedName);
 
-        studentList = new CustomArrayList<>();
 
         addStudent.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,10 +66,10 @@ public class MainActivity extends AppCompatActivity {
 
         loadStudentData();
 
-        // Searching logics
         searchBox.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -74,8 +77,10 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void afterTextChanged(Editable editable) {}
+            public void afterTextChanged(Editable editable) {
+            }
         });
+
     }
 
     @Override
@@ -85,12 +90,10 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
             if (data.hasExtra("NEW_STUDENT")) {
                 Student newStudent = data.getParcelableExtra("NEW_STUDENT");
-                studentList.add(newStudent);
-                sortStudentListByName();
-                adapter.setStudentList(studentList);
+                adapter.addStudent(newStudent);
             } else if (data.hasExtra("UPDATED_STUDENT")) {
                 Student updatedStudent = data.getParcelableExtra("UPDATED_STUDENT");
-                updateStudentInList(updatedStudent);
+                adapter.updateStudent(updatedStudent);
             }
         }
     }
@@ -108,116 +111,93 @@ public class MainActivity extends AppCompatActivity {
             String studentEmail = sharedPreferences.getString("email" + i, "");
 
             Student student = new Student(studentName, studentMatricNo, studentYear, studentSemester, studentMajor, studentEmail);
-            studentList.add(student);
+            adapter.addStudent(student);
         }
-
-        sortStudentListByName();
-        adapter.setStudentList(studentList);
+        adapter.notifyDataSetChanged();
     }
 
     private void showDeleteConfirmationDialog(final Student student) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Delete");
+        builder.setTitle("Delete Student");
         builder.setMessage("Are you sure you want to delete this student?");
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // Delete the student
                 deleteStudent(student);
             }
         });
-        builder.setNegativeButton("No", null);
+        builder.setNegativeButton("Cancel", null);
         builder.show();
     }
 
     private void deleteStudent(Student student) {
-        int index = studentList.indexOf(student);
+        removeStudentFromSharedPreferences(student);
 
-        if (index >= 0) { // Check if the student is found in the list
-            studentList.remove(index); // Remove the student using the index
-            removeStudentFromSharedPreferences(student.getMatricNo()); // Remove from SharedPreferences
-            adapter.setStudentList(studentList);
-            adapter.notifyDataSetChanged(); // Notify adapter of the change
-        }
+        adapter.removeStudent(student);
     }
 
-    private void removeStudentFromSharedPreferences(String matriculationNumber) {
+    private void removeStudentFromSharedPreferences(Student student) {
         SharedPreferences sharedPreferences = getSharedPreferences("StudentPreferences", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         int numberOfStudents = sharedPreferences.getInt("numberOfStudents", 0);
 
-        for (int i = 1; i <= numberOfStudents; i++) {
-            String storedMatricNo = sharedPreferences.getString("matricNo" + i, "");
-            if (storedMatricNo.equals(matriculationNumber)) {
-                // Remove the data for the current student
-                clearStudentData(i, editor);
-
-                // Shifting data for each subsequent student if necessary
-                for (int j = i + 1; j <= numberOfStudents; j++) {
-                    shiftStudentData(sharedPreferences, j, j - 1, editor);
-                }
-
-                // Decrement numberOfStudents
-                editor.putInt("numberOfStudents", numberOfStudents - 1);
-                editor.apply();
-                break;
+        boolean found = false;
+        for (int i = 0; i < numberOfStudents; i++) {
+            String storedMatricNo = sharedPreferences.getString("matricNo" + i, null);
+            if (storedMatricNo != null && storedMatricNo.equals(student.getMatricNo())) {
+                found = true; // Mark as found
             }
+            if (found) {
+                // Shift data from (i+1) to i
+                if (i < numberOfStudents - 1) { // Check to prevent IndexOutOfBoundsException
+                    editor.putString("name" + i, sharedPreferences.getString("name" + (i + 1), ""));
+                    editor.putString("matricNo" + i, sharedPreferences.getString("matricNo" + (i + 1), ""));
+                    editor.putInt("year" + i, sharedPreferences.getInt("year" + (i + 1), -1));
+                    editor.putInt("semester" + i, sharedPreferences.getInt("semester" + (i + 1), -1));
+                    editor.putString("major" + i, sharedPreferences.getString("major" + (i + 1), ""));
+                    editor.putString("email" + i, sharedPreferences.getString("email" + (i + 1), ""));
+                } else {
+                    // Remove the last entry explicitly
+                    editor.remove("name" + i);
+                    editor.remove("matricNo" + i);
+                    editor.remove("year" + i);
+                    editor.remove("semester" + i);
+                    editor.remove("major" + i);
+                    editor.remove("email" + i);
+                }
+            }
+        }
+        if (found) {
+            // Only decrement numberOfStudents if a deletion occurred
+            editor.putInt("numberOfStudents", numberOfStudents - 1);
+            editor.apply();
         }
     }
 
 
     private void shiftStudentData(SharedPreferences sharedPreferences, int targetIndex, int sourceIndex, SharedPreferences.Editor editor) {
+        // Move data from sourceIndex to targetIndex
         editor.putString("name" + targetIndex, sharedPreferences.getString("name" + sourceIndex, ""));
         editor.putString("matricNo" + targetIndex, sharedPreferences.getString("matricNo" + sourceIndex, ""));
         editor.putInt("year" + targetIndex, sharedPreferences.getInt("year" + sourceIndex, -1));
         editor.putInt("semester" + targetIndex, sharedPreferences.getInt("semester" + sourceIndex, -1));
         editor.putString("major" + targetIndex, sharedPreferences.getString("major" + sourceIndex, ""));
         editor.putString("email" + targetIndex, sharedPreferences.getString("email" + sourceIndex, ""));
+        // Do not apply yet; apply will be called after all modifications are done
     }
 
     private void clearStudentData(int index, SharedPreferences.Editor editor) {
+        // Remove data for the student at the given index
         editor.remove("name" + index);
         editor.remove("matricNo" + index);
         editor.remove("year" + index);
         editor.remove("semester" + index);
         editor.remove("major" + index);
         editor.remove("email" + index);
+        // No apply here; it's called outside after all updates are made
     }
 
-    // Bubble Sort
-    private void sortStudentListByName() {
-        for (int i = 0; i < studentList.size() - 1; i++) {
-            for (int j = i + 1; j < studentList.size(); j++) {
-                String name1 = studentList.get(i).getName();
-                String name2 = studentList.get(j).getName();
 
-                // Extracting the first word from each name
-                String[] name1Words = name1.split(" ");
-                String[] name2Words = name2.split(" ");
 
-                // Comparing the first characters of the first words
-                char firstCharName1 = name1Words[0].charAt(0);
-                char firstCharName2 = name2Words[0].charAt(0);
-
-                // If the first characters are different, swap the elements
-                if (firstCharName1 > firstCharName2) {
-
-                    Student temp = studentList.get(i);
-                    studentList.set(i, studentList.get(j));
-                    studentList.set(j, temp);
-                }
-            }
-        }
-    }
-
-    private void updateStudentInList(Student updatedStudent) {
-        for (int i = 0; i < studentList.size(); i++) {
-            if (studentList.get(i).getMatricNo().equals(updatedStudent.getMatricNo())) {
-                studentList.set(i, updatedStudent);
-                sortStudentListByName();
-                adapter.setStudentList(studentList);
-                break;
-            }
-        }
-    }
 }
