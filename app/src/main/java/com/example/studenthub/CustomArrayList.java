@@ -1,28 +1,18 @@
 package com.example.studenthub;
 
-import java.util.Arrays;
-
 public class CustomArrayList<E> {
-    private static final int DEFAULT_CAPACITY = 20000;
+    private static final int DEFAULT_CAPACITY = 100000;
     private Object[] elements;
     private int size;
 
     public CustomArrayList() {
-        this(DEFAULT_CAPACITY);
-    }
-
-    public CustomArrayList(int initialCapacity) {
-        elements = new Object[initialCapacity];
+        elements = new Object[DEFAULT_CAPACITY];
         size = 0;
     }
 
     public void add(E element) {
         ensureCapacity(size + 1);
         elements[size++] = element;
-    }
-        public void clear() {
-        elements = new Object[DEFAULT_CAPACITY];
-        size = 0;
     }
 
     @SuppressWarnings("unchecked")
@@ -37,6 +27,11 @@ public class CustomArrayList<E> {
         return size;
     }
 
+    public void clear() {
+        elements = new Object[DEFAULT_CAPACITY];
+        size = 0;
+    }
+
     public E set(int index, E element) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
@@ -45,6 +40,35 @@ public class CustomArrayList<E> {
         elements[index] = element;
         return oldValue;
     }
+
+
+    public void sort() {
+        int n = size;
+
+        // Bubble sort algorithm
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - i - 1; j++) {
+                // Extracting the first word from each name
+                String name1 = ((Student) elements[j]).getName();
+                String name2 = ((Student) elements[j + 1]).getName();
+                String[] name1Words = name1.split(" ");
+                String[] name2Words = name2.split(" ");
+
+                // Comparing the first characters of the first words
+                char firstCharName1 = name1Words[0].charAt(0);
+                char firstCharName2 = name2Words[0].charAt(0);
+
+                // If the first characters are in wrong order, swap elements
+                if (firstCharName1 > firstCharName2) {
+                    // Swap elements
+                    E temp = (E) elements[j];
+                    elements[j] = elements[j + 1];
+                    elements[j + 1] = temp;
+                }
+            }
+        }
+    }
+
 
     public E remove(int index) {
         if (index < 0 || index >= size) {
@@ -66,10 +90,16 @@ public class CustomArrayList<E> {
         return -1; // Element not found
     }
 
+
+
     private void ensureCapacity(int minCapacity) {
         if (minCapacity > elements.length) {
             int newCapacity = Math.max(elements.length * 2, minCapacity);
-            elements = Arrays.copyOf(elements, newCapacity);
+            Object[] newElements = new Object[newCapacity];
+            for (int i = 0; i < size; i++) {
+                newElements[i] = elements[i];
+            }
+            elements = newElements;
         }
     }
 

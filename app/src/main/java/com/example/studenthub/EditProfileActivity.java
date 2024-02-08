@@ -63,9 +63,9 @@ public class EditProfileActivity extends AppCompatActivity {
 
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        // Checking if matricNo has been changed
+        // Check if matricNo has been changed
         if (!originalMatricNo.equals(updatedMatricNo)) {
-            // Handling the changed matricNo
+            // Handle matricNo change
             for (int i = 1; i <= numberOfStudents; i++) {
                 String storedMatricNo = sharedPreferences.getString("matricNo" + i, "");
 

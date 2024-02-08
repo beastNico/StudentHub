@@ -13,6 +13,10 @@ public class Student implements Parcelable {
     private String major;
     private String email;
 
+    public Student(String name) {
+        this.name = name;
+    }
+
     public Student(String name, String matricNo, int year, int semester, String major, String email) {
         this.name = name;
         this.matricNo = matricNo;
@@ -42,6 +46,10 @@ public class Student implements Parcelable {
             return new Student[size];
         }
     };
+
+    public Student() {
+
+    }
 
     public String getName() {
         return name;

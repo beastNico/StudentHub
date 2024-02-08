@@ -1,5 +1,6 @@
 package com.example.studenthub;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -36,7 +37,7 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
 
     @Override
     public void onBindViewHolder(@NonNull StudentViewHolder holder, int position) {
-        final Student student = filteredStudentList.get(position);
+        final Student student = filteredStudentList.get(position); // Use filteredStudentList
         holder.bind(student);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -62,11 +63,15 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
     }
 
 
+
+
     public void setStudentList(CustomArrayList<Student> students) {
         studentList.clear();
         studentList.addAll(students);
-        filter(searchText); // Reapply the filter
+        filter(searchText); // Apply any existing filters
+        notifyDataSetChanged();
     }
+
 
     public interface OnItemClickListener {
         void onItemClick(Student student);
@@ -96,6 +101,7 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
+                // Handle menu item click
                 int itemId = item.getItemId();
                 if (itemId == R.id.menu_delete) {
                     // Delete action
@@ -133,4 +139,3 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
         notifyDataSetChanged();
     }
 }
-
