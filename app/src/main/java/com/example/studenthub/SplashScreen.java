@@ -12,8 +12,8 @@ import android.widget.TextView;
 
 public class SplashScreen extends AppCompatActivity {
 
-    ImageView ic_logo;
-    TextView appName;
+    private ImageView ic_logo;
+    private TextView appName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +30,7 @@ public class SplashScreen extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(SplashScreen.this, MainActivity.class);
+                Intent intent = new Intent(SplashScreen.this, MainActivity.class); //n
                 startActivity(intent);
                 finish();
             }

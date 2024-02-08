@@ -3,18 +3,26 @@ package com.example.studenthub;
 import java.util.Arrays;
 
 public class CustomArrayList<E> {
-    private static final int DEFAULT_CAPACITY = 100000;
+    private static final int DEFAULT_CAPACITY = 20000;
     private Object[] elements;
     private int size;
 
     public CustomArrayList() {
-        elements = new Object[DEFAULT_CAPACITY];
+        this(DEFAULT_CAPACITY);
+    }
+
+    public CustomArrayList(int initialCapacity) {
+        elements = new Object[initialCapacity];
         size = 0;
     }
 
     public void add(E element) {
         ensureCapacity(size + 1);
         elements[size++] = element;
+    }
+        public void clear() {
+        elements = new Object[DEFAULT_CAPACITY];
+        size = 0;
     }
 
     @SuppressWarnings("unchecked")
@@ -27,11 +35,6 @@ public class CustomArrayList<E> {
 
     public int size() {
         return size;
-    }
-
-    public void clear() {
-        elements = new Object[DEFAULT_CAPACITY];
-        size = 0;
     }
 
     public E set(int index, E element) {

@@ -8,7 +8,6 @@ import android.widget.TextView;
 import android.widget.ImageView;
 
 public class StudentProfileActivity extends AppCompatActivity {
-
     TextView displayedName, displayedMatricNo, displayedYear, displayedSemester, displayedMajor, displayedEmail;
     ImageView icEdit;
 
@@ -35,7 +34,6 @@ public class StudentProfileActivity extends AppCompatActivity {
             displayedMajor.setText("Major: " + selectedStudent.getMajor());
             displayedEmail.setText("Email: " + selectedStudent.getEmail());
 
-            // Fields should be enabled for editing in the EditProfileActivity
             displayedName.setEnabled(true);
             displayedMatricNo.setEnabled(true);
             displayedYear.setEnabled(true);

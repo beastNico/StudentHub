@@ -63,9 +63,9 @@ public class EditProfileActivity extends AppCompatActivity {
 
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        // Check if matricNo has been changed
+        // Checking if matricNo has been changed
         if (!originalMatricNo.equals(updatedMatricNo)) {
-            // Handle matricNo change
+            // Handling the changed matricNo
             for (int i = 1; i <= numberOfStudents; i++) {
                 String storedMatricNo = sharedPreferences.getString("matricNo" + i, "");
 
@@ -120,7 +120,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
         editor.apply();
 
-        // Update the selected student's data
+        // Updating the selected student's data
         selectedStudent.setName(studentName);
         selectedStudent.setMatricNo(updatedMatricNo);
         selectedStudent.setYear(studentYear);
@@ -128,7 +128,7 @@ public class EditProfileActivity extends AppCompatActivity {
         selectedStudent.setMajor(studentMajor);
         selectedStudent.setEmail(studentEmail);
 
-        // Set the updated data in the UI
+        // Setting the updated data in the UI
         name.setText(studentName);
         matricNo.setText(updatedMatricNo);
         year.setText(String.valueOf(studentYear));

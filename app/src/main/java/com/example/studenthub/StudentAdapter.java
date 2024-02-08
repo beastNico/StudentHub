@@ -36,7 +36,7 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
 
     @Override
     public void onBindViewHolder(@NonNull StudentViewHolder holder, int position) {
-        final Student student = filteredStudentList.get(position); // Use filteredStudentList
+        final Student student = filteredStudentList.get(position);
         holder.bind(student);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -61,44 +61,11 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
         return filteredStudentList.size();
     }
 
-    public void addStudent(Student student) {
-        studentList.add(student);
-        notifyItemInserted(studentList.size() - 1);
-        filter(searchText); // searchText to filter
-    }
 
-    public void removeStudent(Student student) {
-        // Find the student in the main list and remove it
-        int positionInMainList = studentList.indexOf(student);
-        if (positionInMainList != -1) {
-            studentList.remove(positionInMainList);
-        }
-
-        // Also remove the student from the filtered list and get its position for UI update
-        int positionInFilteredList = filteredStudentList.indexOf(student);
-        if (positionInFilteredList != -1) {
-            filteredStudentList.remove(positionInFilteredList);
-            notifyItemRemoved(positionInFilteredList);
-        }
-
-        // Re-apply the filter to maintain consistency between lists
-        filter(searchText);
-    }
-
-
-
-    public void updateStudent(Student updatedStudent) {
-        int position = studentList.indexOf(updatedStudent);
-        if (position != -1) {
-            studentList.set(position, updatedStudent);
-            notifyItemChanged(position);
-        }
-    }
-
-    public void clearStudents() {
+    public void setStudentList(CustomArrayList<Student> students) {
         studentList.clear();
-        notifyDataSetChanged();
-        filter("");
+        studentList.addAll(students);
+        filter(searchText); // Reapply the filter
     }
 
     public interface OnItemClickListener {
@@ -129,7 +96,6 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                // Handle menu item click
                 int itemId = item.getItemId();
                 if (itemId == R.id.menu_delete) {
                     // Delete action
