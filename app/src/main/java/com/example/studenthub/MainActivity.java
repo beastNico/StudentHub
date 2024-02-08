@@ -7,18 +7,15 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
     private EditText searchBox;
@@ -149,7 +146,6 @@ public class MainActivity extends AppCompatActivity {
                 found = true; // Mark as found
             }
             if (found) {
-                // Shift data from (i+1) to i
                 if (i < numberOfStudents - 1) { // Check to prevent IndexOutOfBoundsException
                     editor.putString("name" + i, sharedPreferences.getString("name" + (i + 1), ""));
                     editor.putString("matricNo" + i, sharedPreferences.getString("matricNo" + (i + 1), ""));
@@ -184,7 +180,6 @@ public class MainActivity extends AppCompatActivity {
         editor.putInt("semester" + targetIndex, sharedPreferences.getInt("semester" + sourceIndex, -1));
         editor.putString("major" + targetIndex, sharedPreferences.getString("major" + sourceIndex, ""));
         editor.putString("email" + targetIndex, sharedPreferences.getString("email" + sourceIndex, ""));
-        // Do not apply yet; apply will be called after all modifications are done
     }
 
     private void clearStudentData(int index, SharedPreferences.Editor editor) {
@@ -195,9 +190,6 @@ public class MainActivity extends AppCompatActivity {
         editor.remove("semester" + index);
         editor.remove("major" + index);
         editor.remove("email" + index);
-        // No apply here; it's called outside after all updates are made
     }
-
-
 
 }
