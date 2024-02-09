@@ -1,7 +1,7 @@
 package com.example.studenthub;
 
 public class CustomArrayList<E> {
-    private static final int DEFAULT_CAPACITY = 100000;
+    private static final int DEFAULT_CAPACITY = 20000;
     private Object[] elements;
     private int size;
 
@@ -58,9 +58,17 @@ public class CustomArrayList<E> {
                 char firstCharName1 = name1Words[0].charAt(0);
                 char firstCharName2 = name2Words[0].charAt(0);
 
-                // If the first characters are in wrong order, swap elements
-                if (firstCharName1 > firstCharName2) {
-                    // Swap elements
+                // If the first characters are the same, compare the entire first word
+                if (firstCharName1 == firstCharName2) {
+                    int comparison = name1Words[0].compareTo(name2Words[0]);
+                    if (comparison > 0) {
+                        // Swapping elements
+                        E temp = (E) elements[j];
+                        elements[j] = elements[j + 1];
+                        elements[j + 1] = temp;
+                    }
+                } else if (firstCharName1 > firstCharName2) {
+                    // If the first characters are in wrong order, swapping elements
                     E temp = (E) elements[j];
                     elements[j] = elements[j + 1];
                     elements[j + 1] = temp;
@@ -68,6 +76,7 @@ public class CustomArrayList<E> {
             }
         }
     }
+
 
 
     public E remove(int index) {

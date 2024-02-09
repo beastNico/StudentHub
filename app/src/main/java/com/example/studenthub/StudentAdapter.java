@@ -1,6 +1,5 @@
 package com.example.studenthub;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -57,14 +56,6 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
         });
     }
 
-    @Override
-    public int getItemCount() {
-        return filteredStudentList.size();
-    }
-
-
-
-
     public void setStudentList(CustomArrayList<Student> students) {
         studentList.clear();
         studentList.addAll(students);
@@ -72,6 +63,10 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
         notifyDataSetChanged();
     }
 
+    @Override
+    public int getItemCount() {
+        return filteredStudentList.size();
+    }
 
     public interface OnItemClickListener {
         void onItemClick(Student student);
